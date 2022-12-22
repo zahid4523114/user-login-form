@@ -1,20 +1,21 @@
 import React, { useContext, useState } from "react";
 import { toast } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import loginLogo from "../../images/4957412_Mobile-login-Cristina-removebg-preview.png";
 import { AuthContext } from "../context/AuthProvider";
 
 const LogIn = () => {
-  const { resetPassword, userLogin } = useContext(AuthContext);
+  const { resetPassword, userLogin, user } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLogin = (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(email, password);
 
     //login
     userLogin(email, password)
@@ -24,7 +25,8 @@ const LogIn = () => {
         if (user.emailVerified) {
           toast.success("Login successful");
           form.reset();
-          console.log();
+          navigate("/userInfo");
+          // console.log();
         } else {
           toast.error("Please verify your email to log in");
         }
@@ -34,11 +36,13 @@ const LogIn = () => {
       });
   };
 
+  //get user email
   const emailOnChange = (event) => {
     setEmail(event.target.value);
-    console.log(event.target.value);
+    // console.log(event.target.value);
   };
 
+  //reset user password
   const passwordReset = () => {
     resetPassword(email).then(() => {
       toast.success("Password reset email sent");
